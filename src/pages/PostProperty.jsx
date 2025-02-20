@@ -1,7 +1,6 @@
 import { useState } from "react";
 
-// PostProperty Component with state management
-export const PostProperty = () => {
+const PostProperty = () => {
     const [title, setTitle] = useState("");
     const [location, setLocation] = useState("");
     const [price, setPrice] = useState("");
@@ -31,5 +30,6 @@ export const PostProperty = () => {
         </form>
       </div>
     );
-  };
-  
+};
+
+export default PostProperty;

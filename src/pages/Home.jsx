@@ -1,23 +1,47 @@
-import React, { useState } from "react";
-import { Container, Row, Col, Button, Form } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import PropertyCard from "../components/PropertyCard";
+import { Container, Row, Col, Button, Form, Spinner } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Topproject from "./Topproject";
-import home1 from "../assets/img/home1.jpeg";
-import home2 from "../assets/img/home2.jpeg";
-import home3 from "../assets/img/home3.jpeg";
-import home4 from "../assets/img/home4.jpg";
+import home1 from "../assets/img/home2.jpeg";
+import home2 from "../assets/img/home3.jpeg";
+import home3 from "../assets/img/home2.jpeg";
+import home4 from "../assets/img/home3.jpg";
 
 const propertyImages = [home1, home2, home3, home4];
 
 const Home = () => {
   const [activeNav, setActiveNav] = useState("Buy");
   const [searchTerm, setSearchTerm] = useState("");
+  const [properties, setProperties] = useState([]);
+  const [filteredProperties, setFilteredProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const API_BASE_URL = "http://192.168.0.152:8000/api";
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/properties`);
+        setProperties(response.data);
+        setFilteredProperties(response.data);
+      } catch (error) {
+        console.error("Error fetching properties:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProperties();
+  }, []);
 
   const handleSearch = () => {
-    // Implement search functionality here
+    const filtered = properties.filter((property) =>
+      property.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredProperties(filtered);
   };
 
   const sliderSettings = {
@@ -28,30 +52,27 @@ const Home = () => {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
-    arrows: false,
+    arrows: true,
     pauseOnHover: true,
     adaptiveHeight: true,
-    cssEase: "ease-in-out"
   };
 
   return (
     <>
-   
       <Container className="my-4">
         <Row className="align-items-center">
-          {/* Left Side: Title, Navigation, and Search Bar */}
-          <Col md={6}>
+          <Col sm={9}>
             <h2 className="fw-normal">
               Find a home <span className="fst-italic">you'll love</span>
             </h2>
             <div className="bg-white border-bottom py-2">
-              <Container className="d-flex justify-content-center gap-4">
+              <div className="d-flex justify-content-center gap-4">
                 {["Buy", "Rent", "New Projects", "PG", "Plot", "Commercial", "Post Free Property Ad"].map(
                   (item, index) => (
                     <Button
                       key={index}
-                      variant={activeNav === item ? "danger" : "link"}
-                      className={`fw-bold text-decoration-none ${
+                      variant={activeNav === item ? "danger" : "light"}
+                      className={`fw-bold ${
                         activeNav === item ? "text-white" : "text-dark"
                       }`}
                       onClick={() => setActiveNav(item)}
@@ -60,35 +81,32 @@ const Home = () => {
                     </Button>
                   )
                 )}
-              </Container>
+              </div>
             </div>
-            <Row className="justify-content-center my-3">
-              <Col md={8} className="bg-white p-3 rounded shadow-sm d-flex align-items-center gap-2 border">
-                <Form.Control 
+
+            {/* Search Bar */}
+            <div className="my-3">
+              <div className="bg-white p-3 rounded-pill shadow-sm d-flex align-items-center gap-2 border">
+                <Form.Control
                   type="text"
                   placeholder="Search properties..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="border-0 flex-grow-1"
                 />
-                <Button variant="danger" onClick={handleSearch}>
+                <Button variant="danger" className="rounded-pill px-4" onClick={handleSearch}>
                   <FaSearch /> Search
                 </Button>
-              </Col>
-            </Row>
+              </div>
+            </div>
           </Col>
 
-          {/* Right Side: Slider */}
-          <Col md={6}>
-            <div className="slider-container">
+          <Col sm={3}>
+            <div className="slider-container position-relative">
               <Slider {...sliderSettings}>
                 {propertyImages.map((image, index) => (
-                  <div key={index}>
-                    <img
-                      src={image}
-                      alt={`Slide ${index}`}
-                      className="img-fluid rounded"
-                    />
+                  <div key={index} className="position-relative">
+                    <img src={image} alt={`Slide ${index}`} className="img-fluid rounded" />
                   </div>
                 ))}
               </Slider>
@@ -97,36 +115,28 @@ const Home = () => {
         </Row>
       </Container>
 
-      {/* Property Listings */}
       <Container className="mb-5">
         <h4 className="fw-normal mb-4">We've got properties in Indore for everyone</h4>
         <Row className="mt-3 g-4">
-          {[
-            { type: "Owner Properties", count: 1234 },
-            { type: "Projects", count: 567 },
-            { type: "Ready to move-in", count: 891 },
-            { type: "Budget Homes", count: 2345 }
-          ].map((item, index) => (
-            <Col key={`property-${index}`} md={3} className="text-center">
-              <div className="border rounded p-3 shadow-sm h-100 d-flex flex-column">
-                <img
-                  src={propertyImages[index]}
-                  alt={item.type}
-                  className="img-fluid rounded mb-3"
-                  style={{ height: "200px", objectFit: "cover" }}
-                />
-                <h5 className="fw-bold mt-2">{item.count}</h5>
-                <p className="text-muted mb-3">{item.type}</p>
-                <Button variant="danger" className="mt-auto">
-                  Explore &#8594;
-                </Button>
-              </div>
-            </Col>
-          ))}
+          {loading ? (
+            <div className="text-center">
+              <Spinner animation="border" variant="primary" />
+            </div>
+          ) : filteredProperties.length > 0 ? (
+            filteredProperties.map((property) => (
+              <Col key={property.id} md={4} className="mb-4">
+                <PropertyCard {...property} />
+              </Col>
+            ))
+          ) : (
+            <div className="text-center py-5">
+              <h4>No properties found</h4>
+              <p>Please check back later or try a different search.</p>
+            </div>
+          )}
         </Row>
       </Container>
 
-    
       <Topproject />
     </>
   );
