@@ -11,7 +11,7 @@ const Footer = () => {
         <Row>
           {/* Left Section */}
           <Col md={6}>
-            <h6 className="fw-bold">About Magicbricks</h6>
+            <h6 className="fw-bold">About Realstate</h6>
             <p className="text-muted small">
               As the largest platform connecting property buyers and sellers, ...{" "}
               <button className="text-dark fw-bold border-0 bg-transparent p-0" style={{cursor: "pointer"}}>Read more</button>
@@ -70,7 +70,7 @@ const Footer = () => {
         <Row className="mt-4 mb-3">
           <Col>
             <p className="text-muted small text-center">
-              Disclaimer: Magicbricks Realty Services Limited is only an intermediary offering its platform
+              Disclaimer: Realstate Realty Services Limited is only an intermediary offering its platform
               to advertise properties of Seller for a Customer/Buyer/User coming on its Website and is not
               and cannot be a party to or privy to or control in any manner any transactions between the Seller
               and the Customer/Buyer/User. All the offers and discounts on this Website have been extended by{" "}
@@ -85,7 +85,7 @@ const Footer = () => {
         <Container>
           <p className="text-center small mb-0">
             All trademarks, logos and names are properties of their respective owners. All Rights Reserved.
-            &copy; Copyright 2025 Magicbricks Realty Services Limited.
+            &copy; Copyright 2025 Realstate Realty Services Limited.
           </p>
         </Container>
       </div>

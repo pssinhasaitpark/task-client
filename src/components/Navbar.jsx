@@ -15,7 +15,7 @@ const NavbarComponent = () => {
               {/* Left Side: Logo & Indore Dropdown */}
               <div className="d-flex align-items-center">
                 <Navbar.Brand as={Link} to="/" className="fw-bold text-white fs-3">
-                  MagicBricks
+                RealEstate
                 </Navbar.Brand>
 
                 <Dropdown className="ms-3">
