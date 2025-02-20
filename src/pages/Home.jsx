@@ -10,9 +10,9 @@ import Topproject from "./Topproject";
 import home1 from "../assets/img/home2.jpeg";
 import home2 from "../assets/img/home3.jpeg";
 import home3 from "../assets/img/home2.jpeg";
-import home4 from "../assets/img/home3.jpg";
 
-const propertyImages = [home1, home2, home3, home4];
+
+const propertyImages = [home1, home2, home3, home2];
 
 const Home = () => {
   const [activeNav, setActiveNav] = useState("Buy");
@@ -20,7 +20,7 @@ const Home = () => {
   const [properties, setProperties] = useState([]);
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [loading, setLoading] = useState(true);
-  const API_BASE_URL = "http://192.168.0.152:8000/api";
+  const API_BASE_URL = "https://task-api-six-ebon.vercel.app/api";
 
   useEffect(() => {
     const fetchProperties = async () => {

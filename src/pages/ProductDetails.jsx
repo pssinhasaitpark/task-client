@@ -20,7 +20,7 @@ const ProductDetails = () => {
       }
   
       try {
-        const apiUrl = `http://192.168.0.152:8000/api/properties/id?propertyId=${id}`;
+        const apiUrl = `https://task-api-six-ebon.vercel.app/api/properties/id?propertyId=${id}`;
       
         const response = await axios.get(apiUrl);
         

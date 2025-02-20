@@ -56,7 +56,7 @@ const NavbarComponent = () => {
                       Dashboard
                     </Dropdown.Item>
                     <Dropdown.Divider />
-                    <Dropdown.Item as={Link} to="/logout">
+                    <Dropdown.Item as={Link} to="/">
                       Logout
                     </Dropdown.Item>
                   </Dropdown.Menu>
