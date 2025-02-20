@@ -12,7 +12,7 @@ const Login = () => {
 
   const handleSubmit = async (values) => {
     try {
-      const response = await axios.post('http://192.168.0.152:8000/api/user/login', values);
+      const response = await axios.post('https://task-api-six-ebon.vercel.app/api/user/login', values);
       console.log('Login successful:', response.data);
       navigate('/'); // Redirect to home page after successful login
     } catch (error) {
