@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-export const Login = () => {
+const Login = () => {
   const navigate = useNavigate();
   const loginSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
@@ -49,3 +49,5 @@ export const Login = () => {
     </div>
   );
 };
+
+export default Login;

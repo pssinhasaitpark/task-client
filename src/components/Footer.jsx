@@ -14,7 +14,7 @@ const Footer = () => {
             <h6 className="fw-bold">About Magicbricks</h6>
             <p className="text-muted small">
               As the largest platform connecting property buyers and sellers, ...{" "}
-              <a href="#" className="text-dark fw-bold">Read more</a>
+              <button className="text-dark fw-bold border-0 bg-transparent p-0" style={{cursor: "pointer"}}>Read more</button>
             </p>
             <h6 className="fw-bold mt-3">More from our Network</h6>
             <p className="text-muted small">Times Now | ET Now</p>
@@ -74,7 +74,7 @@ const Footer = () => {
               to advertise properties of Seller for a Customer/Buyer/User coming on its Website and is not
               and cannot be a party to or privy to or control in any manner any transactions between the Seller
               and the Customer/Buyer/User. All the offers and discounts on this Website have been extended by{" "}
-              <a href="/about" className="text-dark fw-bold">Read more</a>
+              <button className="text-dark fw-bold border-0 bg-transparent p-0" style={{cursor: "pointer"}}>Read more</button>
             </p>
           </Col>
         </Row>

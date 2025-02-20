@@ -1,5 +1,5 @@
 import React from "react";
-import { Navbar, Container, Button, Dropdown, Nav } from "react-bootstrap";
+import { Navbar, Container, Dropdown } from "react-bootstrap";
 import { FaUser, FaChevronDown } from "react-icons/fa";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
 
@@ -42,23 +42,27 @@ const NavbarComponent = () => {
                   </Dropdown.Toggle>
                 </Dropdown>
 
-                {/* Login Dropdown linked to login page */}
+                {/* User Dropdown after login */}
                 <Dropdown className="me-3">
                   <Dropdown.Toggle 
-                    as={Link} // Make the dropdown toggle a Link
-                    to="/login" // Set the route for the login page
                     variant="outline-light" 
                     className="d-flex align-items-center text-white bg-transparent border-0"
                     style={{ position: "relative" }}
                   >
-                    <FaUser className="me-2" /> Login
+                    <FaUser className="me-2" /> User
                   </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item as={Link} to="/dashboard">
+                      Dashboard
+                    </Dropdown.Item>
+                    <Dropdown.Divider />
+                    <Dropdown.Item as={Link} to="/logout">
+                      Logout
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
                 </Dropdown>
 
-                {/* Post Property Button */}
-                <Button variant="light" className="fw-semibold">
-                  Post Property Free
-                </Button>
+                {/* Post Property Button - Removed as it's now in dropdown */}
               </div>
             </Container>
           </Navbar>
