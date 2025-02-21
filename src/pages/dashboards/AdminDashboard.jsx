@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Table, Button, Modal, Form } from 'react-bootstrap';
-import axios from 'axios';
-
-const API_BASE_URL = 'http://192.168.0.152:8000/api';
+import { Container, Table, Button, Modal, Form, Alert } from 'react-bootstrap';
+import DashboardService from '../../services/DashboardService';
 
 const AdminDashboard = () => {
   const [properties, setProperties] = useState([]);
+  const [users, setUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [currentProperty, setCurrentProperty] = useState({
     id: null,
@@ -15,18 +14,32 @@ const AdminDashboard = () => {
     description: ''
   });
 
-  useEffect(() => {
-    fetchProperties();
-  }, []);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [stats, setStats] = useState({});
 
   const fetchProperties = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/properties`);
+      const response = await DashboardService.getProperties();
       setProperties(response.data);
     } catch (error) {
-      console.error('Error fetching properties:', error);
+      setError('Failed to fetch properties');
     }
   };
+
+  const fetchDashboardStats = async () => {
+    try {
+      const response = await DashboardService.getDashboardStats();
+      setStats(response.data);
+    } catch (error) {
+      setError('Failed to fetch dashboard statistics');
+    }
+  };
+
+  useEffect(() => {
+    fetchProperties();
+    fetchDashboardStats();
+  }, []);
 
   const handleAddProperty = () => {
     setCurrentProperty({
@@ -46,10 +59,11 @@ const AdminDashboard = () => {
 
   const handleDeleteProperty = async (id) => {
     try {
-      await axios.delete(`${API_BASE_URL}/properties/${id}`);
+      await DashboardService.deleteProperty(id);
       fetchProperties();
+      setSuccess('Property deleted successfully');
     } catch (error) {
-      console.error('Error deleting property:', error);
+      setError('Failed to delete property');
     }
   };
 
@@ -57,25 +71,58 @@ const AdminDashboard = () => {
     e.preventDefault();
     try {
       if (currentProperty.id) {
-        await axios.put(`${API_BASE_URL}/properties/${currentProperty.id}`, currentProperty);
+        await DashboardService.updateProperty(currentProperty.id, currentProperty);
       } else {
-        await axios.post(`${API_BASE_URL}/properties`, currentProperty);
+        await DashboardService.createProperty(currentProperty);
       }
       setShowModal(false);
       fetchProperties();
+      setSuccess('Property saved successfully');
     } catch (error) {
-      console.error('Error saving property:', error);
+      setError('Failed to save property');
+    }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const response = await DashboardService.getUsers();
+      setUsers(response.data);
+    } catch (error) {
+      setError('Failed to fetch users');
     }
   };
 
   return (
     <Container className="mt-4">
-      <h2>Property Management</h2>
+      <h2>Admin Dashboard</h2>
+      
+      {error && <Alert variant="danger">{error}</Alert>}
+      {success && <Alert variant="success">{success}</Alert>}
+
+      <div className="mb-4">
+        <h4>Dashboard Statistics</h4>
+        <div className="d-flex gap-3">
+          <div className="card p-3">
+            <h5>Total Properties</h5>
+            <p className="display-6">{stats.totalProperties || 0}</p>
+          </div>
+          <div className="card p-3">
+            <h5>Active Users</h5>
+            <p className="display-6">{stats.activeUsers || 0}</p>
+          </div>
+          <div className="card p-3">
+            <h5>Recent Activity</h5>
+            <p className="display-6">{stats.recentActivity || 0}</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>Property Management</h3>
       <Button variant="primary" onClick={handleAddProperty} className="mb-3">
         Add Property
       </Button>
 
-      <Table striped bordered hover responsive>
+      <Table striped bordered hover responsive className="mb-5">
         <thead>
           <tr>
             <th>Title</th>
@@ -109,6 +156,27 @@ const AdminDashboard = () => {
               </td>
             </tr>
           ))}
+        </tbody>
+      </Table>
+
+      <h3>User Management</h3>
+      <Table striped bordered hover responsive>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colSpan="4" className="text-center">
+              <Button variant="info" onClick={() => fetchUsers()}>
+                Load Users
+              </Button>
+            </td>
+          </tr>
         </tbody>
       </Table>
 

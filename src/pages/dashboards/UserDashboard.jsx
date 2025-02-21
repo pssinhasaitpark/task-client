@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { Container, Form, Button, Alert } from 'react-bootstrap';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { Container, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import DashboardService from '../../services/DashboardService';
 import { useNavigate } from 'react-router-dom';
 
 const UserDashboard = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -49,27 +50,14 @@ const UserDashboard = () => {
     e.preventDefault();
     setError('');
     setSuccess('');
+    setLoading(true);
 
     try {
-      const form = new FormData();
-      Object.keys(formData).forEach(key => {
-        if (key === 'images') {
-          formData.images.forEach((image, index) => {
-            form.append(`images`, image);
-          });
-        } else {
-          form.append(key, formData[key]);
-        }
-      });
-
-      const response = await axios.post('http://192.168.0.152:8000/api/properties', form, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      const response = await DashboardService.createProperty(formData);
 
       if (response.status === 201) {
         setSuccess('Property added successfully!');
+        setLoading(false);
         setFormData({
           title: '',
           description: '',
@@ -102,6 +90,7 @@ const UserDashboard = () => {
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to add property');
+      setLoading(false);
     }
   };
 
@@ -426,8 +415,21 @@ const UserDashboard = () => {
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit">
-          Add Property
+        <Button variant="primary" type="submit" disabled={loading}>
+          {loading ? (
+            <>
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+              {' Adding...'}
+            </>
+          ) : (
+            'Add Property'
+          )}
         </Button>
       </Form>
     </Container>

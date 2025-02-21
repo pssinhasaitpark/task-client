@@ -1,47 +1,80 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import PropertyCard from "../components/PropertyCard";
-import { Container, Row, Col, Button, Form, Spinner } from "react-bootstrap";
-import { FaSearch } from "react-icons/fa";
+import { Container, Row, Col, Button, Spinner } from "react-bootstrap";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Topproject from "./Topproject";
+import SearchBar from "../components/SearchBar";
 import home1 from "../assets/img/home2.jpeg";
 import home2 from "../assets/img/home3.jpeg";
 import home3 from "../assets/img/home2.jpeg";
-
+import FeaturedProjects from "./FeaturedProjects";
+import PopularProperties from "./PopularProperties";
+import PropertyServices from "./PropertyServices";
+import NewProjectGallery from "./NewProjectGallery";
+import OwnerProperties from "./OwnerProperties";
+import AdviceTools from "./AdviceTools";
 
 const propertyImages = [home1, home2, home3, home2];
+const API_BASE_URL = "https://task-api-six-ebon.vercel.app/api";
 
 const Home = () => {
   const [activeNav, setActiveNav] = useState("Buy");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [properties, setProperties] = useState([]);
+  const [allProperties, setAllProperties] = useState([]);
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [loading, setLoading] = useState(true);
-  const API_BASE_URL = "https://task-api-six-ebon.vercel.app/api";
+
+  const fetchProperties = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${API_BASE_URL}/properties`);
+      setAllProperties(response.data);
+      setFilteredProperties(response.data);
+    } catch (error) {
+      console.error("Error fetching properties:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filterProperties = (location, bhk, minPrice, maxPrice) => {
+    let filtered = allProperties;
+    
+    if (location) {
+      filtered = filtered.filter(property => 
+        property.location.toLowerCase().includes(location.toLowerCase())
+      );
+    }
+    
+    if (bhk) {
+      filtered = filtered.filter(property => property.bhk >= bhk);
+    }
+    
+    if (minPrice) {
+      filtered = filtered.filter(property => property.price >= minPrice);
+    }
+    
+    if (maxPrice) {
+      filtered = filtered.filter(property => property.price <= maxPrice);
+    }
+    
+    setFilteredProperties(filtered);
+  };
 
   useEffect(() => {
-    const fetchProperties = async () => {
-      try {
-        const response = await axios.get(`${API_BASE_URL}/properties`);
-        setProperties(response.data);
-        setFilteredProperties(response.data);
-      } catch (error) {
-        console.error("Error fetching properties:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchProperties();
   }, []);
 
-  const handleSearch = () => {
-    const filtered = properties.filter((property) =>
-      property.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredProperties(filtered);
+  const handleSearch = (searchParams) => {
+    const params = new URLSearchParams(searchParams);
+    const location = params.get('location');
+    const bhk = Number(params.get('bhk'));
+    const minPrice = Number(params.get('minPrice'));
+    const maxPrice = Number(params.get('maxPrice'));
+    
+    filterProperties(location, bhk, minPrice, maxPrice);
   };
 
   const sliderSettings = {
@@ -72,9 +105,7 @@ const Home = () => {
                     <Button
                       key={index}
                       variant={activeNav === item ? "danger" : "light"}
-                      className={`fw-bold ${
-                        activeNav === item ? "text-white" : "text-dark"
-                      }`}
+                      className={`fw-bold ${activeNav === item ? "text-white" : "text-dark"}`}
                       onClick={() => setActiveNav(item)}
                     >
                       {item}
@@ -83,24 +114,11 @@ const Home = () => {
                 )}
               </div>
             </div>
-
-            {/* Search Bar */}
+            {/* Integrated Search Bar */}
             <div className="my-3">
-              <div className="bg-white p-3 rounded-pill shadow-sm d-flex align-items-center gap-2 border">
-                <Form.Control
-                  type="text"
-                  placeholder="Search properties..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="border-0 flex-grow-1"
-                />
-                <Button variant="danger" className="rounded-pill px-4" onClick={handleSearch}>
-                  <FaSearch /> Search
-                </Button>
-              </div>
+              <SearchBar onSearch={handleSearch} />
             </div>
           </Col>
-
           <Col sm={3}>
             <div className="slider-container position-relative">
               <Slider {...sliderSettings}>
@@ -136,8 +154,17 @@ const Home = () => {
           )}
         </Row>
       </Container>
+      <Container>
+<FeaturedProjects/>
+<PopularProperties/>
+<PropertyServices/>
+<Topproject />
+<NewProjectGallery/>
+<OwnerProperties/>
+<AdviceTools/>
+</Container>
 
-      <Topproject />
+     
     </>
   );
 };

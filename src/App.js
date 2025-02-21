@@ -1,5 +1,6 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { AuthProvider, AuthContext } from "./context/AuthContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "./components/Navbar";
 import Dashboard from "./pages/dashboards/UserDashboard";
@@ -23,6 +24,17 @@ const NotFound = () => (
 const UserDashboard = () => <div className="container mt-5"><h2>User Dashboard</h2></div>;
 const SellerDashboard = () => <div className="container mt-5"><h2>Seller Dashboard</h2></div>;
 
+// Protected Route Component
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated, loading } = React.useContext(AuthContext);
+  
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  
+  return isAuthenticated ? children : <Navigate to="/login" />;
+};
+
 // Layout Wrapper
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -39,23 +51,53 @@ const Layout = ({ children }) => {
 
 function App() {
   return (
-    <Router>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/add-property" element={<PostProperty />} />
-          <Route path="/post-property" element={<PostProperty />} />
-          <Route path="/results" element={<SearchResults />} />
-          <Route path="*" element={<NotFound />} />
-          <Route path="/dashboard/user" element={<UserDashboard />} />
-          <Route path="/dashboard/admin" element={<AdminDashboard />} />
-          <Route path="/dashboard/seller" element={<SellerDashboard />} />
-          <Route path="/product/:id" element={<ProductDetails />} />
-        </Routes>
-      </Layout>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route path="/add-property" element={<PostProperty />} />
+            <Route path="/post-property" element={<PostProperty />} />
+            <Route path="/results" element={<SearchResults />} />
+            <Route path="*" element={<NotFound />} />
+            <Route 
+              path="/dashboard/user" 
+              element={
+                <ProtectedRoute>
+                  <UserDashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard/admin" 
+              element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard/seller" 
+              element={
+                <ProtectedRoute>
+                  <SellerDashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route path="/product/:id" element={<ProductDetails />} />
+          </Routes>
+        </Layout>
+      </Router>
+    </AuthProvider>
   );
 }
 

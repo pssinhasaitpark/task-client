@@ -2,9 +2,12 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
   const loginSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
     password: Yup.string().required('Required')
@@ -14,6 +17,7 @@ const Login = () => {
     try {
       const response = await axios.post('https://task-api-six-ebon.vercel.app/api/user/login', values);
       console.log('Login successful:', response.data);
+      login(response.data.token); // Store the token
       navigate('/'); // Redirect to home page after successful login
     } catch (error) {
       console.error('Login failed:', error);
