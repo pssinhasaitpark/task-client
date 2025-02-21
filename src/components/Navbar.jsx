@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Navbar, Container, Dropdown } from "react-bootstrap";
 import { FaUser, FaChevronDown } from "react-icons/fa";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { Link } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const NavbarComponent = () => {
+  const { isAuthenticated, logout } = useContext(AuthContext);
+
   return (
     <div>
       {/* Main Navbar */}
@@ -15,14 +18,14 @@ const NavbarComponent = () => {
               {/* Left Side: Logo & Indore Dropdown */}
               <div className="d-flex align-items-center">
                 <Navbar.Brand as={Link} to="/" className="fw-bold text-white fs-3">
-                RealEstate
+                  RealEstate
                 </Navbar.Brand>
 
                 <Dropdown className="ms-3">
                   <Dropdown.Toggle 
                     variant="light" 
                     className="fw-semibold border-0 text-white bg-transparent"
-                    style={{ position: "relative" }} // Ensures no default arrow
+                    style={{ position: "relative" }}
                   >
                     Indore
                   </Dropdown.Toggle>
@@ -43,26 +46,30 @@ const NavbarComponent = () => {
                 </Dropdown>
 
                 {/* User Dropdown after login */}
-                <Dropdown className="me-3">
-                  <Dropdown.Toggle 
-                    variant="outline-light" 
-                    className="d-flex align-items-center text-white bg-transparent border-0"
-                    style={{ position: "relative" }}
-                  >
-                    <FaUser className="me-2" /> User
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item as={Link} to="/dashboard">
-                      Dashboard
-                    </Dropdown.Item>
-                    <Dropdown.Divider />
-                    <Dropdown.Item as={Link} to="/">
-                      Logout
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-
-                {/* Post Property Button - Removed as it's now in dropdown */}
+                {isAuthenticated ? (
+                  <Dropdown className="me-3">
+                    <Dropdown.Toggle 
+                      variant="outline-light" 
+                      className="d-flex align-items-center text-white bg-transparent border-0"
+                      style={{ position: "relative" }}
+                    >
+                      <FaUser className="me-2" /> User
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item as={Link} to="/dashboard">
+                        Dashboard
+                      </Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item onClick={logout}>
+                        Logout
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                ) : (
+                  <Link to="/login" className="btn btn-outline-light me-3">
+                    Login
+                  </Link>
+                )}
               </div>
             </Container>
           </Navbar>
@@ -80,7 +87,7 @@ const NavbarComponent = () => {
               <Dropdown.Toggle 
                 variant="light" 
                 className="fw-semibold border-0 text-black bg-transparent d-flex align-items-center"
-                style={{ position: "relative", boxShadow: "none" }} // No default arrow
+                style={{ position: "relative", boxShadow: "none" }}
               >
                 {item} <FaChevronDown className="ms-2 text-danger" />
               </Dropdown.Toggle>
