@@ -1,0 +1,110 @@
+/* Main container */
+.owner-properties-container {
+    margin: 50px auto;
+  }
+  
+  /* Title and See All Button */
+  .title-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .title-section h4 {
+    font-weight: bold;
+    position: relative;
+    display: inline-block;
+  }
+  
+  .title-section h4::after {
+    content: "";
+    width: 50px;
+    height: 3px;
+    background-color: #f1c40f; /* Yellow underline */
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+  }
+  
+  .see-all-link {
+    color: red;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  
+  /* Card Wrapper */
+  .property-cards-wrapper {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding-bottom: 10px;
+  }
+  
+  /* Property Cards */
+  .property-card {
+    width: 250px;
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+    flex-shrink: 0;
+  }
+  
+  .property-card:hover {
+    transform: scale(1.03);
+  }
+  
+  /* Image and Icon */
+  .image-wrapper {
+    position: relative;
+  }
+  
+  .property-image {
+    height: 160px;
+    object-fit: cover;
+  }
+  
+  .image-count {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 4px 8px;
+    font-size: 14px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  /* Property Info */
+  .property-title {
+    font-weight: bold;
+  }
+  
+  .property-price {
+    font-weight: bold;
+    color: #007bff;
+  }
+  
+  .property-location {
+    color: #6c757d;
+  }
+  
+  .property-status {
+    color: green;
+  }
+  
+  /* Right Arrow Button */
+  .arrow-button {
+    background: white;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    padding: 8px;
+    position: relative;
+    height: 40px;
+    width: 40px;
+  }
+  

@@ -10,6 +10,12 @@ import SearchBar from "../components/SearchBar";
 import home1 from "../assets/img/home2.jpeg";
 import home2 from "../assets/img/home3.jpeg";
 import home3 from "../assets/img/home2.jpeg";
+import FeaturedProjects from "./FeaturedProjects";
+import PopularProperties from "./PopularProperties";
+import PropertyServices from "./PropertyServices";
+import NewProjectGallery from "./NewProjectGallery";
+import OwnerProperties from "./OwnerProperties";
+import AdviceTools from "./AdviceTools";
 
 const propertyImages = [home1, home2, home3, home2];
 const API_BASE_URL = "https://task-api-six-ebon.vercel.app/api";
@@ -148,8 +154,17 @@ const Home = () => {
           )}
         </Row>
       </Container>
+      <Container>
+<FeaturedProjects/>
+<PopularProperties/>
+<PropertyServices/>
+<Topproject />
+<NewProjectGallery/>
+<OwnerProperties/>
+<AdviceTools/>
+</Container>
 
-      <Topproject />
+     
     </>
   );
 };
