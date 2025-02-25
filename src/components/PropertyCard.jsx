@@ -68,7 +68,7 @@ const PropertyCard = ({
         <div className="d-grid">
           <button 
             className="btn btn-primary"
-            onClick={() => navigate(`/property/${id}`)}
+            onClick={() => navigate(`/product/${id}`)}
           >
             View Details
           </button>

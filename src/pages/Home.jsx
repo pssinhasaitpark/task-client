@@ -149,6 +149,7 @@ const Home = () => {
           ) : filteredProperties.length > 0 ? (
             filteredProperties.map((property) => (
               <Col key={property.id} md={4} className="mb-4">
+                {console.log("Property ID:", property.id)}
                 <PropertyCard {...property} />
               </Col>
             ))
