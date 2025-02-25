@@ -16,6 +16,8 @@ import PropertyServices from "./PropertyServices";
 import NewProjectGallery from "./NewProjectGallery";
 import OwnerProperties from "./OwnerProperties";
 import AdviceTools from "./AdviceTools";
+import PropertySnapshot from "./PropertySnapshot";
+import PropertyOptions from "./PropertyOptions";
 
 const propertyImages = [home1, home2, home3, home2];
 const API_BASE_URL = "https://task-api-six-ebon.vercel.app/api";
@@ -25,6 +27,7 @@ const Home = () => {
   const [allProperties, setAllProperties] = useState([]);
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(''); // State for error messages
 
   const fetchProperties = async () => {
     setLoading(true);
@@ -34,6 +37,7 @@ const Home = () => {
       setFilteredProperties(response.data);
     } catch (error) {
       console.error("Error fetching properties:", error);
+      setErrorMessage('Failed to fetch properties. Please try again later.'); // Set error message
     } finally {
       setLoading(false);
     }
@@ -93,49 +97,51 @@ const Home = () => {
   return (
     <>
       <Container className="my-4">
-        <Row className="align-items-center">
-          <Col sm={9}>
-            <h2 className="fw-normal">
-              Find a home <span className="fst-italic">you'll love</span>
-            </h2>
-            <div className="bg-white border-bottom py-2">
-              <div className="d-flex justify-content-center gap-4">
-                {["Buy", "Rent", "New Projects", "PG", "Plot", "Commercial", "Post Free Property Ad"].map(
-                  (item, index) => (
-                    <Button
-                      key={index}
-                      variant={activeNav === item ? "danger" : "light"}
-                      className={`fw-bold ${activeNav === item ? "text-white" : "text-dark"}`}
-                      onClick={() => setActiveNav(item)}
-                    >
-                      {item}
-                    </Button>
-                  )
-                )}
-              </div>
+  <Row className="align-items-center">
+    <Col xs={12} sm={9}>
+      <h2 className="fw-normal">
+        Find a home <span className="fst-italic">you'll love</span>
+      </h2>
+      <div className="bg-white border-bottom py-2">
+        <div className="d-flex flex-wrap justify-content-center gap-4">
+          {["Buy", "Rent", "New Projects", "PG", "Plot", "Commercial", "Post Free Property Ad"].map(
+            (item, index) => (
+              <Button
+                key={index}
+                variant={activeNav === item ? "danger" : "light"}
+                className={`fw-bold ${activeNav === item ? "text-white" : "text-dark"}`}
+                onClick={() => setActiveNav(item)}
+              >
+                {item}
+              </Button>
+            )
+          )}
+        </div>
+      </div>
+      {/* Integrated Search Bar */}
+      <div className="my-3">
+        <SearchBar onSearch={handleSearch} />
+      </div>
+    </Col>
+    <Col xs={12} sm={3}>
+      <div className="slider-container position-relative">
+        <Slider {...sliderSettings}>
+          {propertyImages.map((image, index) => (
+            <div key={index} className="position-relative">
+              <img src={image} alt={`Slide ${index}`} className="img-fluid rounded" />
             </div>
-            {/* Integrated Search Bar */}
-            <div className="my-3">
-              <SearchBar onSearch={handleSearch} />
-            </div>
-          </Col>
-          <Col sm={3}>
-            <div className="slider-container position-relative">
-              <Slider {...sliderSettings}>
-                {propertyImages.map((image, index) => (
-                  <div key={index} className="position-relative">
-                    <img src={image} alt={`Slide ${index}`} className="img-fluid rounded" />
-                  </div>
-                ))}
-              </Slider>
-            </div>
-          </Col>
-        </Row>
-      </Container>
+          ))}
+        </Slider>
+      </div>
+    </Col>
+  </Row>
+</Container>
+
 
       <Container className="mb-5">
         <h4 className="fw-normal mb-4">We've got properties in Indore for everyone</h4>
         <Row className="mt-3 g-4">
+        {errorMessage && <div className="alert alert-danger">{errorMessage}</div>} {/* Display error message */}
           {loading ? (
             <div className="text-center">
               <Spinner animation="border" variant="primary" />
@@ -162,6 +168,8 @@ const Home = () => {
 <NewProjectGallery/>
 <OwnerProperties/>
 <AdviceTools/>
+<PropertySnapshot/>
+<PropertyOptions/>
 </Container>
 
      
