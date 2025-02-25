@@ -1,5 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import MyProperties from "./pages/MyProperties"; // Import MyProperties component
+import Favorites from "./pages/Favorites"; // Import Favorites component
 import { AuthProvider, AuthContext } from "./context/AuthContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "./components/Navbar";
@@ -8,9 +10,12 @@ import PostProperty from "./pages/PostProperty";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import SearchResults from "./pages/SearchResults";
 import ProductDetails from "./pages/ProductDetails";
 import AdminDashboard from "./pages/dashboards/AdminDashboard";
+
+// Updated ProtectedRoute for MyProperties and Favorites
 
 // Components
 const NotFound = () => (
@@ -38,7 +43,7 @@ const ProtectedRoute = ({ children }) => {
 // Layout Wrapper
 const Layout = ({ children }) => {
   const location = useLocation();
-  const hideNavbarAndFooter = location.pathname === "/login"; 
+  const hideNavbarAndFooter = location.pathname === "/login" || location.pathname === "/register";
 
   return (
     <>
@@ -57,6 +62,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route 
               path="/dashboard" 
               element={
@@ -65,6 +71,22 @@ function App() {
                 </ProtectedRoute>
               } 
             />
+            <Route 
+              path="/my-properties" 
+              element={
+                <ProtectedRoute>
+                  <MyProperties />
+                </ProtectedRoute>
+              } 
+            /> {/* Route for My Properties */}
+            <Route 
+              path="/favorites" 
+              element={
+                <ProtectedRoute>
+                  <Favorites />
+                </ProtectedRoute>
+              } 
+            /> {/* Route for Favorites */}
             <Route path="/add-property" element={<PostProperty />} />
             <Route path="/post-property" element={<PostProperty />} />
             <Route path="/results" element={<SearchResults />} />

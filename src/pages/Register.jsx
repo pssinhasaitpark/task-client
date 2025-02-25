@@ -6,51 +6,40 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext);
+  const { register } = useContext(AuthContext);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const loginSchema = Yup.object().shape({
+  const registerSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
     password: Yup.string().required('Required'),
   });
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    console.log('Submitting login with values:', values); // Debug log for submitted values
-    setErrorMessage(''); 
+    console.log('Submitting registration with values:', values); // Debug log for submitted values
+    setErrorMessage('');
 
     try {
-      const response = await axios.post('https://task-api-six-ebon.vercel.app/api/user/login', values);
-
-      if (response.data.token) {
-        console.log('Login successful:', response.data);
-        localStorage.setItem('authToken', response.data.token); 
-        const isLoggedIn = await login(values);
-        console.log('Login status:', isLoggedIn); // Debug log for login status
-        if (isLoggedIn) {
-            navigate('/'); 
-        }
-      } else {
-        toast.error('Login failed. Invalid response from server.'); // Show error message
-        setErrorMessage('Login failed. Invalid response from server.');
-      }
+      const response = await register(values);
+      toast.success('Registration successful!'); // Show success message
+      navigate('/login'); // Redirect to login page after successful registration
     } catch (error) {
-      setErrorMessage(error.response?.data?.message || 'Login failed. Please check your credentials.'); // Display error message to user
-      console.error('Login failed:', error);
+      setErrorMessage(error.response?.data?.message || 'Registration failed. Please try again.'); // Display error message to user
+      console.error('Registration failed:', error);
     } finally {
-      setSubmitting(false); 
+      setSubmitting(false);
     }
   };
 
   return (
     <div className="container w-50 mt-5" style={{ background: 'url(/path/to/logo.png) no-repeat center center fixed', backgroundSize: 'cover' }}>
-      <h2 className="text-center" style={{ color: 'white' }}>Login</h2>
+      <h2 className="text-center" style={{ color: 'white' }}>Register</h2>
       {errorMessage && <div className="alert alert-danger">{errorMessage}</div>} {/* Display error message */}
 
       <Formik
         initialValues={{ email: '', password: '' }}
-        validationSchema={loginSchema}
+        validationSchema={registerSchema}
         onSubmit={handleSubmit}
       >
         {({ isSubmitting }) => (
@@ -68,11 +57,11 @@ const Login = () => {
             </div>
 
             <div className="d-flex gap-2">
-              <button type="button" className="btn btn-secondary flex-grow-1" onClick={() => navigate('/register')}>
-                Register
+              <button type="button" className="btn btn-secondary flex-grow-1" onClick={() => navigate('/login')}>
+                Login
               </button>
               <button type="submit" className="btn btn-primary flex-grow-1" disabled={isSubmitting}>
-                {isSubmitting ? 'Logging in...' : 'Login'}
+                {isSubmitting ? 'Registering...' : 'Register'}
               </button>
             </div>
           </Form>
@@ -82,4 +71,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

@@ -1,0 +1,53 @@
+.property-container {
+    margin-top: 20px;
+  }
+  
+  .property-title {
+    font-weight: bold;
+    font-size: 20px;
+    position: relative;
+  }
+  
+  .underline {
+    width: 50px;
+    height: 3px;
+    background-color: #e8b800;
+    margin-top: 4px;
+  }
+  
+  .city-tabs .nav-link {
+    color: black;
+    font-weight: bold;
+    padding: 8px 15px;
+  }
+  
+  .city-tabs .nav-link.active-tab {
+    border-bottom: 3px solid red;
+    color: black;
+  }
+  
+  .property-list {
+    margin-top: 15px;
+  }
+  
+  .property-category {
+    padding: 10px 15px;
+  }
+  
+  .category-title {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+  
+  .property-link {
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+  }
+  
+  .property-link:hover {
+    text-decoration: underline;
+    color: black;
+  }
+  
